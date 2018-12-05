@@ -1,1 +1,1 @@
-# slimming
+# sliming
