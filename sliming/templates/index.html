@@ -1,0 +1,17 @@
+{% extends 'layout.html' %}
+{% block content %}
+    {% if user.is_authenticated %}
+        {{ user.profile.nickname }}님 안녕하세요
+        <a href="{% url 'logout' %}">로그아웃</a>
+        <a href="{% url 'mypage' user %}">마이페이지</a>
+        <img src="{{ user.profile.profile_image.url }}" alt="">
+
+{#        <video width="400" controls>#}
+{#          <source src="https://scontent-icn1-1.cdninstagram.com/vp/1e082ff31c6872ca370f22dd169d6e99/5C0A41D0/t50.2886-16/47565014_2214893112057936_870401446388957184_n.mp4" type="video/mp4">#}
+{#          Your browser does not support HTML5 video.#}
+{#        </video>#}
+    {% else %}
+         <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'signup' %}">Signup</a>
+    {% endif %}
+{% endblock %}

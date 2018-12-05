@@ -1,0 +1,5 @@
+media
+settings.py
+.idea
+*.pyc
+db.sqlite3

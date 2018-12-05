@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h3>{{ shop.name }}</h3>
+    <ul>
+        <li>{{ shop.description }}</li>
+        <li>{{ shop.grade }}</li>
+        <li>{{ shop.created_at }}</li>
+        <li><img src="{{ shop.shop_image.url }}" alt="{{ shop.name }}"></li>
+        <ul>
+            {% for off in shop.offline.all %}
+                <li>{{ off }}</li>
+            {% endfor %}
+        </ul>
+    </ul>
+{% endblock %}
