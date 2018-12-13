@@ -4,11 +4,15 @@ from shop.models import Shop
 class Kind(models.Model): # 슬라임 종류
     name = models.CharField(max_length=20)
 
+    def __str__(self):
+        return self.name
+
 
 class Slime(models.Model): # 슬라임 상품
     shop = models.ForeignKey(Shop)
     name = models.CharField(max_length=100) # 슬라임 이름
     price = models.IntegerField()
+    volume = models.IntegerField() # 용량
     kind = models.ForeignKey(Kind) # 슬라임 종류
     description = models.TextField() # 슬라임 정보
     img = models.ImageField(upload_to='%Y/%m/%d/slime')
