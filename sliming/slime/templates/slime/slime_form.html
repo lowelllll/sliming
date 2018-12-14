@@ -1,5 +1,14 @@
 {% extends 'layout.html' %}
 {% block content %}
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+                    {{ message.message }}
+                </div>
+            {% endfor %}
+        </div>
+{% endif %}
  <form action="" method="post" enctype="multipart/form-data">
         <table>
             {% csrf_token %}
