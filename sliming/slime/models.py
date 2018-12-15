@@ -5,7 +5,8 @@ from django.forms import ValidationError
 
 def instagram_post_url_validator(url):
     if not re.match(r'^https://www.instagram.com/p/.', url):
-        raise ValidationError('인스타그램 게시글 링크는 https://www.instagram.com/p/ 로 시작되는 링크여야합니다.')
+        if not re.match(r'^https://scontent-icn1-1.cdninstagram.com/.', url):
+            raise ValidationError('인스타그램 게시글 링크는 https://www.instagram.com/p/ 로 시작되는 링크여야합니다.')
 
 
 class Kind(models.Model): # 슬라임 종류

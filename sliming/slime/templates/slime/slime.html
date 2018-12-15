@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% load humanize %}
+{% block content %}
+    <h2>슬라임 정보</h2>
+    <ul>
+        <li><h3>{{ slime.name }}</h3></li>
+        <li>판매 마켓 : <a href="{% url 'shop:detail' slime.shop.name %}">{{ slime.shop.name }}</a></li>
+        <li>가격 : {{ slime.price|intcomma}}원</li>
+        <li>용량 : {{ slime.volume }}ml</li>
+        <li>종류 : {{ slime.kind }}</li>
+        <li>상세 내용 : {{ slime.description }}</li>
+        <li>사진
+            <img src="{{ slime.img.url }}" alt="{{ slime.name }}">
+        </li>
+        <li>슬라이밍 영상
+            <video style="width:300px; height:300px;" controls>
+                <source src="{{ slime.video_link }}" type="video/mp4">
+            </video>
+        </li>
+        <li>판매 여부 :
+            {% if slime.status == 1 %}판매 중
+            {% elif slime.status == 2 %}판매 중단
+            {% else %} 판매 임시 중단
+            {% endif %}
+        </li>
+        {% if slime.shop.user == request.user %}
+            <a href="{% url 'slime:modify' slime.id %}">정보 수정</a>
+        {% endif %}
+    </ul>
+{% endblock %}
