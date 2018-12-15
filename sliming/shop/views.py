@@ -20,5 +20,5 @@ def create_shop(request):
 
 @login_required
 def detail_shop(request, shop):
-    shop = Shop.objects.get(name=shop)
+    shop = Shop.objects.prefetch_related('slime_set').get(name=shop)
     return render(request, 'shop/shop_detail.html', {'shop':shop})

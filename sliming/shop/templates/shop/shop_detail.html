@@ -5,12 +5,34 @@
         <li>{{ shop.description }}</li>
         <li>평점 : {{ shop.grade }}</li>
         <li>{{ shop.created_at }}</li>
-        <li><img src="{{ shop.shop_image.url }}" alt="{{ shop.name }}"></li>
-        <ul>오프라인 판매처
+        <li>
+            <img src="{{ shop.shop_image.url }}" alt="{{ shop.name }}" style="width:300px; height: 300px;">
+        </li>
+        <li>오프라인 판매처
+            <ul>
             {% for off in shop.offline.all %}
                 <li>{{ off }}</li>
             {% endfor %}
-        </ul>
+            </ul>
+        </li>
         <li><a href="{% url 'slime:add' %}">슬라임 등록</a></li>
+        <li>슬라임 목록
+            <ul>
+            {% for slime in shop.slime_set.all %}
+                <li>
+                    <p>{{ slime.name }}</p>
+                    <div>
+                        <img src="{{ slime.img.url }}" alt="" style="width:300px; height:300px;">
+                    </div>
+                    <div>
+                        <video style="width:300px; height:300px;" controls>
+                            <source src="{{ slime.video_link }}" type="video/mp4">
+                        </video>
+                    </div>
+                </li>
+            {% endfor %}
+
+        </ul>
+        </li>
     </ul>
 {% endblock %}
