@@ -19,9 +19,12 @@ class Shop(models.Model):
     description = models.TextField(null=True, blank=True)
     shop_image = models.ImageField(upload_to='%Y/%m/%d/shop')
     status = models.BooleanField() # 마켓이 오픈되어있는지 아닌지
+    offline = models.ManyToManyField(OfflineShop, blank=True)
+    online = models.URLField(blank=True)
+    instagram_link = models.URLField()
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    offline = models.ManyToManyField(OfflineShop, blank=True)
+
 
     def __str__(self):
         return self.name

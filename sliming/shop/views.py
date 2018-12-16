@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib.auth.decorators import login_required
+# from django.views.generic import ListView
 from .forms import ShopForm
 from .models import Shop
 
@@ -20,7 +21,10 @@ def create_shop(request):
 
 
 def detail_shop(request, shop):
-    shop = Shop.objects.prefetch_related('offline').get(name=shop)
+    try:
+        shop = Shop.objects.prefetch_related('offline').get(name=shop)
+    except Exception:
+        raise Http404()
     return render(request, 'shop/shop_detail.html', {'shop':shop})
 
 
