@@ -1,0 +1,13 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <h2>슬라임 마켓 목록</h2>
+    <ul>
+        {% for shop in shops %}
+            <li>
+                <p><a href="{{ shop.get_absolute_url }}">{{ shop.name }}</a></p>
+                <img src="{{ shop.shop_image.url }}" alt="{{ shop.name }}">
+                <p>팔로워 수 </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

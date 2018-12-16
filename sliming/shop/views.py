@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from .forms import ShopForm
 from .models import Shop
@@ -10,7 +11,7 @@ def create_shop(request):
         if form.is_valid():
             shop = form.save(commit=False)
             shop.user = request.user
-            shop.is_open = False
+            shop.status = False
             shop.save()
             return redirect('/')
     else:
@@ -18,7 +19,33 @@ def create_shop(request):
     return render(request, 'shop/shop_form.html', {'form':form})
 
 
-@login_required
 def detail_shop(request, shop):
-    shop = Shop.objects.prefetch_related('slime_set').get(name=shop)
+    shop = Shop.objects.prefetch_related('offline').get(name=shop)
     return render(request, 'shop/shop_detail.html', {'shop':shop})
+
+
+def list_shop(request):
+    """
+    샵 리스트 반환
+    :param request:
+    :return:
+    """
+    order = request.GET.get('order', '-grade')
+    shops = Shop.objects.filter(status=True).order_by(order)[:50] # 오픈중인 슬라임 마켓
+    return render(request, 'shop/shop_list.html', {'shops': shops})
+
+
+def more_shops(request):
+    """
+    현재 open되어있는 샵의 목록.
+    무한스크롤 위함
+    :param request:
+    :return:
+    """
+    page = request.GET.get('page', 2)
+    order = request.GET.get('order', '-grade')
+    limit = 50
+    offset = (page-1) * limit
+    shops = Shop.objects.all().order_by(order)[offset:offset+limit].values()# 평점이 높은 순
+    return JsonResponse(list(shops))
+
