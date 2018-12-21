@@ -2,6 +2,17 @@
 {% load shop_tag %}
 {% block content %}
     <h3>{{ shop.name }}</h3>
+    {% if not user == shop.user %}
+    <div>
+        <button onclick="follow" class="follow">
+            {% if is_follow %}
+                언팔로우
+            {% else %}
+                팔로우
+            {% endif %}
+        </button>
+    </div>
+    {% endif %}
     <ul>
         <li>{{ shop.description }}</li>
         <li>평점 : {{ shop.grade }}</li>
@@ -18,12 +29,15 @@
         </li>
         <li>온라인 판매처 : {{ shop.online }}
         </li>
-        <li>인스타그램 링크 : <a href="{{ shop.instagram_link }}">{{ shop.instagram_link }}</a></li>
-        <li><a href="{% url 'slime:add' %}">슬라임 등록</a></li>
+        <li>인스타그램 링크 : <a href="{{ shop.instagram_link }}" target="_blank">{{ shop.instagram_link }}</a></li>
+        {% if shop.user == slime.user %}
+        <li>
+            <a href="{% url 'slime:add' %}">슬라임 등록</a>
+        </li>
+        {% endif %}
         <li>슬라임 목록
             <li>총 {{ shop.slime_set.all|count }}개의 슬라임 핀매 중</li>
         {#              TODO :: template filter를 사용해 판매중인 슬라임 개수 판별  #}
-
             <ul>
             {% for slime in shop.slime_set.all|slice:":9" %}
                 <li>
@@ -45,4 +59,9 @@
         </ul>
         </li>
     </ul>
+{% endblock %}
+{% block script %}
+    function follow () {
+
+    }
 {% endblock %}

@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse, Http404
+from django.http import JsonResponse, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 # from django.views.generic import ListView
 from .forms import ShopForm
-from .models import Shop
+from .models import Shop, Follow
 
 @login_required
 def create_shop(request):
@@ -22,10 +22,14 @@ def create_shop(request):
 
 def detail_shop(request, shop):
     try:
-        shop = Shop.objects.prefetch_related('offline').get(name=shop)
+        shop = Shop.objects.select_related('user').prefetch_related('slime_set', 'offline').get(name=shop)
+        if request.user != shop.user:
+            is_follow = Follow.objects.filter(requester=request.user.id, shop=shop.id)
+        else:
+            is_follow = None
     except Exception:
         raise Http404()
-    return render(request, 'shop/shop_detail.html', {'shop':shop})
+    return render(request, 'shop/shop_detail.html', {'shop':shop, 'is_follow': is_follow})
 
 
 def list_shop(request):
@@ -51,5 +55,21 @@ def more_shops(request):
     limit = 50
     offset = (page-1) * limit
     shops = Shop.objects.all().order_by(order)[offset:offset+limit].values()# 평점이 높은 순
-    return JsonResponse(list(shops))
+    return JsonResponse({'shops': list(shops)})
 
+
+def follow(request):
+    requester_id = request.POST.get('requester', '')
+    shop_id = request.POST.get('shop', '')
+
+    follow = Follow.objects.get_or_create(
+        requester=requester_id,
+        shop=shop_id
+    )
+    action = 'follow'
+
+    if follow:
+        follow.delete()
+        action = 'unfollow'
+
+    return JsonResponse({'action': action})

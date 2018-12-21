@@ -33,6 +33,18 @@ class Shop(models.Model):
         return reverse('shop:detail', args=[self.name])
 
 
+class Follow(models.Model):
+    """
+    follower = 팔로우를 요청한 유저 id
+    shop = 팔로우 대상 마켓 id
+    """
+    requester = models.IntegerField()
+    shop = models.IntegerField()
+
+    def __str__(self):
+        return self.requester
+
+
 
 
 
