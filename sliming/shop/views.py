@@ -25,7 +25,7 @@ def detail_shop(request, shop):
     try:
         shop = Shop.objects.select_related('user').prefetch_related('slime_set', 'offline').get(name=shop)
         if request.user != shop.user:
-            is_follow = Follow.objects.filter(requester=request.user.id, shop=shop.id)
+            is_follow = Follow.objects.filter(requester=request.user.id, shop=shop.user.id)
         else:
             is_follow = None
     except Exception:
