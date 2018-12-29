@@ -4,7 +4,7 @@
     <h3>{{ shop.name }}</h3>
     {% if not user == shop.user %}
     <div>
-        <button onclick="follow" class="follow">
+        <button onclick="follow({{ user.id }}, {{ shop.user.id }})" class="follow">
             {% if is_follow %}
                 언팔로우
             {% else %}
@@ -61,7 +61,24 @@
     </ul>
 {% endblock %}
 {% block script %}
-    function follow () {
+    <script>
+    function follow (requester, shop) {
+        reuqester = parseInt(requester);
+        shop = parseInt(shop);
 
+        url = '{% url 'shop:follow' %}';
+        $.ajax({
+            type: 'POST',
+            data: {
+                requester: requester,
+                shop: shop,
+            },
+            url: url,
+            success:function(response){
+                var text = response.action==='follow'?'팔로우':'언팔로우';
+                $('.follow').text(text);
+            }
+        });
     }
+    </script>
 {% endblock %}

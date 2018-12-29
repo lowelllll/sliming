@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 # from django.views.generic import ListView
 from .forms import ShopForm
 from .models import Shop, Follow
@@ -58,18 +59,19 @@ def more_shops(request):
     return JsonResponse({'shops': list(shops)})
 
 
+@csrf_exempt
 def follow(request):
-    requester_id = request.POST.get('requester', '')
-    shop_id = request.POST.get('shop', '')
+    requester_id = request.POST.get('requester', 0)
+    shop_id = request.POST.get('shop', 0)
 
-    follow = Follow.objects.get_or_create(
+    obj, created = Follow.objects.get_or_create(
         requester=requester_id,
         shop=shop_id
     )
-    action = 'follow'
+    action = 'unfollow'
 
-    if follow:
-        follow.delete()
-        action = 'unfollow'
+    if not created:
+        obj.delete()
+        action = 'follow'
 
     return JsonResponse({'action': action})

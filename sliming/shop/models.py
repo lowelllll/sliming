@@ -41,8 +41,7 @@ class Follow(models.Model):
     requester = models.IntegerField()
     shop = models.IntegerField()
 
-    def __str__(self):
-        return self.requester
+
 
 
 
